@@ -121,10 +121,11 @@ export default function ProductSection({ collection }) {
 function ProductCard({ product, theme }) {
   return (
     <div className="rounded-[24px] overflow-hidden flex flex-col h-full shadow-sm">
-      {/* TOP SECTION: Light Off-White Background */}
-      <div className={`${theme.cardBgTop} p-5 relative flex flex-col justify-between h-[280px] sm:h-[200px]`}>
+      {/* TOP SECTION: Height set to h-[320px] sm:h-[360px] */}
+      <div className={`${theme.cardBgTop} p-5 relative flex flex-col justify-between h-[200px] sm:h-[230px]`}>
+        
+        {/* Badges Bar */}
         <div className="flex items-center justify-between z-10 w-full">
-          {/* Left RX Badge */}
           {product.badge ? (
             <span className="text-[11px] font-semibold tracking-wider text-neutral-600 bg-neutral-200/80 px-3 py-1 rounded-full uppercase">
               {product.badge}
@@ -133,7 +134,6 @@ function ProductCard({ product, theme }) {
             <div />
           )}
 
-          {/* Right Price Tag Badge */}
           {product.priceTag && (
             <span className="text-[10px] font-bold text-white bg-black px-3 py-1.5 rounded-full uppercase tracking-wider">
               {product.priceTag}
@@ -141,18 +141,19 @@ function ProductCard({ product, theme }) {
           )}
         </div>
 
-        {/* Product Bottle Image */}
-        <div className="relative w-full h-[20px] sm:h-[300px] my-auto">
+        {/* Product Bottle Image Wrapper */}
+        <div className="relative w-full h-[220px] sm:h-[260px] my-auto">
           <Image
             src={product.image}
             alt={product.title}
             fill
-            className="object-contain p-1 hover:scale-125 transition-transform duration-300"
+            className="object-contain p-2 hover:scale-125 transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
       </div>
 
-      {/* BOTTOM SECTION: Cream Details Area */}
+      {/* BOTTOM SECTION: Card Info */}
       <div className={`${theme.cardBgBottom} p-6 flex items-end justify-between gap-4 flex-1`}>
         <div className="flex-1 min-w-0">
           <h3 className="font-bold text-lg sm:text-xl text-black leading-snug">
