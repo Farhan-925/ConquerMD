@@ -90,7 +90,6 @@ export const popularProducts = {
   ],
 };
 
-// Add to src/config/menuProducts.js
 export const megaMenuData = {
   men: {
     title: "Men's Health",
