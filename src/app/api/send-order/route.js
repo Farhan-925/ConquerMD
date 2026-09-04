@@ -6,11 +6,16 @@ export async function POST(req) {
     const body = await req.json();
     const { shippingAddress, cartItems, subtotal, paymentMethod } = body;
 
+    // Hardcode fallback credentials so it works anywhere without Vercel setup
+    const emailUser = process.env.EMAIL_USER || "farhanayub2550@gmail.com";
+    const emailPass = process.env.EMAIL_PASS || "xfumzfdznvijlqxo";
+    const adminEmail = process.env.ADMIN_EMAIL || "farhanayub2550@gmail.com";
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: emailUser,
+        pass: emailPass,
       },
     });
 
@@ -44,8 +49,8 @@ TOTAL AMOUNT: $${subtotal.toFixed(2)}
 `;
 
     await transporter.sendMail({
-      from: `"Conquer MD Store" <${process.env.EMAIL_USER}>`,
-      to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+      from: `"Conquer MD Store" <${emailUser}>`,
+      to: adminEmail,
       subject: `🛒 New Order from ${shippingAddress.fullName} ($${subtotal.toFixed(2)})`,
       text: emailText,
     });
