@@ -19,11 +19,7 @@ export default function Home() {
     <div className="relative w-full min-h-screen bg-[#0D0D0D] overflow-x-hidden">
       
       {/* Header Overlay */}
-      <div className="fixed top-0 left-0 right-0 z-50 w-full">
-        <AnnouncementBar />
-        <Navbar />
-      </div>
-
+      
       {/* Main Content */}
       <main className="w-full min-h-screen bg-background text-foreground">
         <HeroSection />
@@ -38,9 +34,6 @@ export default function Home() {
         <FaqSection />
         <NewsletterCard />
       </main>
-      <div>
-        <Footer />
-      </div>
       
     </div>
   );
