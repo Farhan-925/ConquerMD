@@ -38,13 +38,33 @@ export default function CheckoutPage() {
     );
   };
 
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
     dispatch(startCheckoutProcess());
 
-    setTimeout(() => {
-      dispatch(completeOrder());
-    }, 1500);
+    try {
+      // Call Next.js API route to send order details email
+      const response = await fetch("/api/send-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          shippingAddress,
+          cartItems,
+          subtotal,
+          paymentMethod,
+        }),
+      });
+
+      if (response.ok) {
+        dispatch(completeOrder());
+      } else {
+        alert("Failed to process order. Please try again.");
+      }
+    } catch (error) {
+      console.error("Order error:", error);
+    }
   };
 
   if (orderComplete) {
