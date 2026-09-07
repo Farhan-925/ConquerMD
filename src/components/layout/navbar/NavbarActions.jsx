@@ -5,7 +5,7 @@ import { User, Search, ShoppingBag, LogOut } from "lucide-react";
 import { useSelector } from "react-redux";
 import CartDrawer from "../cartdrawer/CartDrawer";
 import Link from "next/link";
-import createClient from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 
 export function NavbarActions() {
   const [isCartOpen, setIsCartOpen] = useState(false);
