@@ -11,7 +11,7 @@ import {
   startCheckoutProcess,
   completeOrder,
 } from "@/lib/features/CheckoutSlice";
-import createClient from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 
 export default function CheckoutPage() {
   const dispatch = useDispatch();
