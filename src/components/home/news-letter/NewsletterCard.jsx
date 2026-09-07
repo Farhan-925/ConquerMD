@@ -26,10 +26,10 @@ export default function NewsletterCard() {
   return (
     <section className="bg-[#dedede] py-8 px-4 flex justify-center items-center">
       {/* Container configured for 80% width and 25vh height */}
-      <div className="bg-[#f2f2f0] rounded-[24px] px-8 py-6 w-[80%] max-w-5xl h-[25vh] md:h-[30vh]  flex flex-col justify-between overflow-hidden shadow-xs">
+      <div className="bg-[#f2f2f0] rounded-[24px] px-8 py-6 w-[80%] max-w-5xl h-[25vh] md:h-[40vh]  flex flex-col justify-between overflow-hidden shadow-xs">
         
         {/* --- INFINITE AUTO-SCROLLING MARQUEE TEXT --- */}
-        <div className="overflow-hidden whitespace-nowrap text-neutral-400 font-serif italic text-2xl sm:text-3xl md:text-4xl">
+        <div className="overflow-hidden whitespace-nowrap text-neutral-400 font-serif italic text-2xl sm:text-3xl md:text-[52px]">
           <div className="animate-marquee flex gap-4">
             {/* First track */}
             {phrases.map((phrase, idx) => (
@@ -57,7 +57,7 @@ export default function NewsletterCard() {
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-transparent font-serif italic text-xl sm:text-4xl text-black placeholder:text-neutral-500 focus:outline-none pr-10"
+              className="w-full bg-transparent font-serif italic text-xl sm:text-[52px] text-black placeholder:text-neutral-500 focus:outline-none pr-10"
             />
             <button
               type="submit"

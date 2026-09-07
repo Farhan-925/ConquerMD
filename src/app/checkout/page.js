@@ -4,22 +4,25 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { CreditCard, Banknote, ShieldCheck, Lock, ArrowLeft, CheckCircle2 } from "lucide-react";
+
 import {
   updateShippingAddress,
   setPaymentMethod,
   startCheckoutProcess,
   completeOrder,
 } from "@/lib/features/CheckoutSlice";
+import createClient from "@/utils/supabase/client";
 
 export default function CheckoutPage() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const supabase = createClient();
 
   const cartItems = useSelector((state) => state.cart?.cartItems || []);
   const checkoutState = useSelector((state) => state.checkout) || {};
 
   const {
-    shippingAddress = { fullName: "", email: "", address: "", city: "", postalCode: "" },
+    shippingAddress = { fullName: "", email: "", phone: "", address: "", city: "", postalCode: "" },
     paymentMethod = "card",
     isProcessing = false,
     orderComplete = false,
@@ -43,7 +46,33 @@ export default function CheckoutPage() {
     dispatch(startCheckoutProcess());
 
     try {
-      // Call Next.js API route to send order details email
+      // Get logged-in user if available
+      const { data: { user } } = await supabase.auth.getUser();
+
+      // 1. Save order to Supabase
+      const { error: dbError } = await supabase.from("orders").insert([
+        {
+          user_id: user?.id || null,
+          full_name: shippingAddress.fullName,
+          email: shippingAddress.email,
+          phone: shippingAddress.phone,
+          address: shippingAddress.address,
+          city: shippingAddress.city,
+          postal_code: shippingAddress.postalCode,
+          payment_method: paymentMethod,
+          subtotal: subtotal,
+          cart_items: cartItems,
+          status: "pending",
+        },
+      ]);
+
+      if (dbError) {
+        console.error("Supabase Order Error:", dbError.message);
+        alert("Failed to save order to database. Please try again.");
+        return;
+      }
+
+      // 2. Trigger email notification route
       const response = await fetch("/api/send-order", {
         method: "POST",
         headers: {
@@ -60,7 +89,8 @@ export default function CheckoutPage() {
       if (response.ok) {
         dispatch(completeOrder());
       } else {
-        alert("Failed to process order. Please try again.");
+        alert("Order placed, but failed to send email notification.");
+        dispatch(completeOrder());
       }
     } catch (error) {
       console.error("Order error:", error);
@@ -134,19 +164,36 @@ export default function CheckoutPage() {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-medium text-neutral-300 mb-1">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="e.g. john@example.com"
-                      required
-                      value={shippingAddress.email || ""}
-                      onChange={handleInputChange}
-                      className="w-full bg-neutral-900/80 border border-neutral-700 rounded-xl p-3.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500 transition-colors"
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-neutral-300 mb-1">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="e.g. john@example.com"
+                        required
+                        value={shippingAddress.email || ""}
+                        onChange={handleInputChange}
+                        className="w-full bg-neutral-900/80 border border-neutral-700 rounded-xl p-3.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500 transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-medium text-neutral-300 mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="e.g. +1 234 567 8900"
+                        required
+                        value={shippingAddress.phone || ""}
+                        onChange={handleInputChange}
+                        className="w-full bg-neutral-900/80 border border-neutral-700 rounded-xl p-3.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-500 transition-colors"
+                      />
+                    </div>
                   </div>
 
                   <div>

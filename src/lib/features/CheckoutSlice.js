@@ -4,6 +4,7 @@ const initialState = {
   shippingAddress: {
     fullName: "",
     email: "",
+    phone: "", // Added phone field
     address: "",
     city: "",
     postalCode: "",
